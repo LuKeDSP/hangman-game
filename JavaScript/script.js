@@ -1,26 +1,26 @@
-var programming_languages = [
-	"margarida",
-	"aviao",
-	"egito",
-	"dado",
-	"dinamite",
-	"cenoura",
-	"abacaxi",
-	"espada",
-	"computador",
-	"policial",
-	"bombeiro",
-	"lenhador",
-	"garfo",
-	"esmeralda",
-  "estacionamento",
-  "celeiro",
-  "estatua",
-  "futebol",
-  "handebol",
-  "motocicleta",
-  "professor",
-  "caminhao"
+var wordList = [
+"margarida",
+"aviao",
+"egito",
+"dado",
+"dinamite",
+"cenoura",
+"abacaxi",
+"espada",
+"computador",
+"policial",
+"bombeiro",
+"lenhador",
+"garfo",
+"esmeralda",
+"estacionamento",
+"celeiro",
+"estatua",
+"futebol",
+"handebol",
+"motocicleta",
+"professor",
+"caminhao"
 ]
 
 let answer = '';
@@ -30,11 +30,11 @@ let guessed = [];
 let wordStatus = null;
 
 function randomWord() {
-  answer = programming_languages[Math.floor(Math.random() * programming_languages.length)];
+  answer = wordList[Math.floor(Math.random() * wordList.length)];
 }
 
 function generateButtons() {
-  let buttonsHTML = 'abcdefghijklmnopqrstuvwxyz'.split('').map(letter =>
+  let buttonsHTML = 'abcdefghijklmnopqrstuvwxyz'.split('').map((letter,i) =>
     `
       <button
         class="buttonPrimary"
@@ -42,8 +42,12 @@ function generateButtons() {
         onClick="handleGuess('` + letter + `')"
       >
         ` + letter + `
-      </button>
-    `).join('');
+      </button> ${(i+1)%9===0?'<br>':''}
+
+    `
+    
+    ).join('')
+      .concat(`<button class="btnInfo" onClick="reset()">&#10227;</button>`)
 
   document.getElementById('keyboard').innerHTML = buttonsHTML;
 }
@@ -69,14 +73,16 @@ function updateHangmanPicture() {
 
 function checkIfGameWon() {
   if (wordStatus === answer) {
-    document.getElementById('keyboard').innerHTML = 'Você acertou!!!';
+    document.getElementById('keyboard').innerHTML = 
+    `Você acertou!!! <br> <button class="btnInfo" style="margin-top: 10px; width:150px" onClick="reset()">&#10227;</button>`;
   }
 }
 
 function checkIfGameLost() {
   if (mistakes === maxWrong) {
     document.getElementById('wordSpotlight').innerHTML = 'A palavra era: ' + answer;
-    document.getElementById('keyboard').innerHTML = 'Você errou!!!';
+    document.getElementById('keyboard').innerHTML = 
+    'Você errou!!! <br> <button class="btnInfo" style="margin-top: 10px; width:150px" onClick="reset()">&#10227;</button>';
   }
 }
 
@@ -102,6 +108,13 @@ function reset() {
 }
 
 document.getElementById('maxWrong');
+
+function registerWord() {
+  let input = document.getElementById('wordInput')
+  wordList.push(input.value)
+  alert("Palavra cadastrada com sucesso!")
+  input.value = '';
+}
 
 randomWord();
 generateButtons();
